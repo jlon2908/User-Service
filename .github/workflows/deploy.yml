@@ -105,4 +105,5 @@ jobs:
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}" \
             -var="execution_role_arn=arn:aws:iam::148761677807:role/ecsTaskExecutionRole-user-service" \
             -var="target_group_arn=arn:aws:elasticloadbalancing:us-east-1:148761677807:targetgroup/tg-user-service/fe077ac7b490fd27" \
-            -var="ecs_cluster_arn=arka-ecs-cluster"
+            -var="ecs_cluster_arn=arka-ecs-cluster" \
+            -var="log_group_name=/ecs/user-service"

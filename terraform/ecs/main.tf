@@ -24,10 +24,9 @@ variable "ecs_cluster_arn" {
   type        = string
 }
 
-# CloudWatch Log Group
-resource "aws_cloudwatch_log_group" "user_service" {
-  name              = "/ecs/user-service"
-  retention_in_days = 7
+variable "log_group_name" {
+  description = "Nombre del log group de CloudWatch existente."
+  type        = string
 }
 
 # Task Definition
@@ -47,7 +46,7 @@ resource "aws_ecs_task_definition" "user_service" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.user_service.name
+          awslogs-group         = var.log_group_name
           awslogs-region        = "us-east-1"
           awslogs-stream-prefix = "ecs"
         }
