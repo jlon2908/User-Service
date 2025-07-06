@@ -100,6 +100,7 @@ jobs:
             -var="vpc_id=${{ secrets.VPC_ID }}" \
             -var='subnet_ids=["subnet-057a322f484b9f962","subnet-09ee219f4838cb06f"]' \
             -var="security_group_id=${{ secrets.SECURITY_GROUP_ID }}" \
+            -var="alb_arn=${{ secrets.ALB_ARN }}" \
             -var="alb_listener_arn=${{ secrets.ALB_LISTENER_ARN }}" \
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}" \
             -var="execution_role_arn=arn:aws:iam::148761677807:role/ecsTaskExecutionRole-user-service" \
