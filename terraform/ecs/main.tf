@@ -42,7 +42,13 @@ resource "aws_ecs_task_definition" "user_service" {
       name      = "user-service"
       image     = var.ecr_image_url
       portMappings = [{ containerPort = 8084, hostPort = 8084 }]
-      environment = []
+      environment = [
+        { name = "DB_JDBC_URL", value = var.db_jdbc_url },
+        { name = "DB_HOST", value = var.db_host },
+        { name = "DB_USERNAME", value = var.db_username },
+        { name = "DB_PASSWORD", value = var.db_password },
+        { name = "JWT_SECRET", value = var.jwt_secret }
+      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -93,3 +99,9 @@ resource "aws_ecs_service" "user_service" {
 
 # Variable para la imagen de ECR
 variable "ecr_image_url" {}
+
+variable "db_jdbc_url" {}
+variable "db_host" {}
+variable "db_username" {}
+variable "db_password" {}
+variable "jwt_secret" {}

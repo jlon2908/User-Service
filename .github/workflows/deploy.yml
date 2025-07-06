@@ -106,4 +106,9 @@ jobs:
             -var="execution_role_arn=arn:aws:iam::148761677807:role/ecsTaskExecutionRole-user-service" \
             -var="target_group_arn=arn:aws:elasticloadbalancing:us-east-1:148761677807:targetgroup/tg-user-service/fe077ac7b490fd27" \
             -var="ecs_cluster_arn=arka-ecs-cluster" \
-            -var="log_group_name=/ecs/user-service"
+            -var="log_group_name=/ecs/user-service" \
+            -var="db_jdbc_url=${{ secrets.DB_JDBC_URL }}" \
+            -var="db_host=${{ secrets.DB_HOST }}" \
+            -var="db_username=${{ secrets.DB_USERNAME }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD }}" \
+            -var="jwt_secret=${{ secrets.JWT_SECRET }}"
