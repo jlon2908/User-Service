@@ -11,7 +11,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: us-east-1
       VPC_ID: ${{ secrets.VPC_ID }}
-      SUBNET_IDS: ${{ secrets.SUBNET_IDS }}
       SECURITY_GROUP_ID: ${{ secrets.SECURITY_GROUP_ID }}
       ALB_ARN: ${{ secrets.ALB_ARN }}
       DB_HOST: ${{ secrets.DB_HOST }}
@@ -81,15 +80,10 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
         run: terraform init -input=false
 
-      - name: Convert SUBNET_IDS to JSON array
-        id: convert_subnets
-        run: |
-          echo "SUBNET_IDS_JSON=$(echo '${{ secrets.SUBNET_IDS }}' | jq -c .)" >> $GITHUB_ENV
-
       - name: Debug variables
         run: |
           echo "VPC_ID=${{ secrets.VPC_ID }}"
-          echo "SUBNET_IDS_JSON=${{ env.SUBNET_IDS_JSON }}"
+          echo "SUBNET_IDS=[\"subnet-057a322f484b9f962\",\"subnet-09ee219f4838cb06f\"]"
           echo "SECURITY_GROUP_ID=${{ secrets.SECURITY_GROUP_ID }}"
           echo "ALB_ARN=${{ secrets.ALB_ARN }}"
           echo "ECR_IMAGE_URL=${{ env.ECR_IMAGE_URL }}"
@@ -104,7 +98,7 @@ jobs:
         run: |
           terraform apply -auto-approve -input=false \
             -var="vpc_id=${{ secrets.VPC_ID }}" \
-            -var="subnet_ids=${{ env.SUBNET_IDS_JSON }}" \
+            -var='subnet_ids=["subnet-057a322f484b9f962","subnet-09ee219f4838cb06f"]' \
             -var="security_group_id=${{ secrets.SECURITY_GROUP_ID }}" \
             -var="alb_arn=${{ secrets.ALB_ARN }}" \
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}"
