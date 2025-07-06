@@ -45,7 +45,8 @@ public class WebSecurityConfig {
                                 "/api/users/login",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
-                                "/webjars/swagger-ui/**"
+                                "/webjars/swagger-ui/**",
+                                "/actuator/health"
                         ).permitAll()
                         .pathMatchers("/api/clients/profile").hasAuthority("CLIENT")
                 )
