@@ -9,6 +9,11 @@ variable "alb_listener_arn" {
   default     = null
 }
 
+variable "execution_role_arn" {
+  description = "ARN del rol de ejecución de ECS ya existente."
+  type        = string
+}
+
 # ECS Cluster
 resource "aws_ecs_cluster" "user_service" {
   name = "user-service-cluster"
@@ -21,7 +26,7 @@ resource "aws_ecs_task_definition" "user_service" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "512"
   memory                   = "1024"
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = var.execution_role_arn
   container_definitions    = jsonencode([
     {
       name      = "user-service"
@@ -30,27 +35,6 @@ resource "aws_ecs_task_definition" "user_service" {
       environment = []
     }
   ])
-}
-
-# IAM Role para ECS Task Execution
-resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole-user-service"
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role_policy.json
-}
-
-data "aws_iam_policy_document" "ecs_task_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 # Target Group para el ALB
