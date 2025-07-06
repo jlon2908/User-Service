@@ -14,6 +14,11 @@ variable "execution_role_arn" {
   type        = string
 }
 
+variable "target_group_arn" {
+  description = "ARN del target group existente para el servicio."
+  type        = string
+}
+
 # ECS Cluster
 resource "aws_ecs_cluster" "user_service" {
   name = "user-service-cluster"
@@ -37,30 +42,13 @@ resource "aws_ecs_task_definition" "user_service" {
   ])
 }
 
-# Target Group para el ALB
-resource "aws_lb_target_group" "user_service" {
-  name        = "tg-user-service"
-  port        = 8084
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  target_type = "ip"
-  health_check {
-    path                = "/actuator/health"
-    matcher             = "200"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-  }
-}
-
 # Listener Rule para redirección
 resource "aws_lb_listener_rule" "user_service" {
   listener_arn = var.alb_listener_arn
   priority     = 100
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.user_service.arn
+    target_group_arn = var.target_group_arn
   }
   condition {
     path_pattern {
@@ -82,7 +70,7 @@ resource "aws_ecs_service" "user_service" {
     assign_public_ip = true
   }
   load_balancer {
-    target_group_arn = aws_lb_target_group.user_service.arn
+    target_group_arn = var.target_group_arn
     container_name   = "user-service"
     container_port   = 8084
   }

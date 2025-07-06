@@ -88,10 +88,6 @@ jobs:
           echo "ALB_ARN=${{ secrets.ALB_ARN }}"
           echo "ECR_IMAGE_URL=${{ env.ECR_IMAGE_URL }}"
 
-      - name: Terraform Import Target Group
-        working-directory: ./terraform/ecs
-        run: terraform import aws_lb_target_group.user_service arn:aws:elasticloadbalancing:us-east-1:148761677807:targetgroup/tg-user-service/fe077ac7b490fd27 || true
-
       - name: Terraform Apply ECS
         working-directory: ./terraform/ecs
         env:
@@ -107,4 +103,5 @@ jobs:
             -var="alb_arn=${{ secrets.ALB_ARN }}" \
             -var="alb_listener_arn=${{ secrets.ALB_LISTENER_ARN }}" \
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}" \
-            -var="execution_role_arn=arn:aws:iam::148761677807:role/ecsTaskExecutionRole-user-service"
+            -var="execution_role_arn=arn:aws:iam::148761677807:role/ecsTaskExecutionRole-user-service" \
+            -var="target_group_arn=arn:aws:elasticloadbalancing:us-east-1:148761677807:targetgroup/tg-user-service/fe077ac7b490fd27"
