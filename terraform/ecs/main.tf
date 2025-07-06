@@ -19,9 +19,9 @@ variable "target_group_arn" {
   type        = string
 }
 
-# ECS Cluster
-resource "aws_ecs_cluster" "user_service" {
-  name = "user-service-cluster"
+variable "ecs_cluster_arn" {
+  description = "ARN o nombre del ECS cluster existente."
+  type        = string
 }
 
 # Task Definition
@@ -60,7 +60,7 @@ resource "aws_lb_listener_rule" "user_service" {
 # ECS Service
 resource "aws_ecs_service" "user_service" {
   name            = "user-service"
-  cluster         = aws_ecs_cluster.user_service.id
+  cluster         = var.ecs_cluster_arn
   task_definition = aws_ecs_task_definition.user_service.arn
   launch_type     = "FARGATE"
   desired_count   = 1
