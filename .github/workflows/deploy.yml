@@ -1,5 +1,6 @@
 name: Deploy User Service to AWS ECS
 
+
 on:
   push:
     branches: [main]
@@ -76,4 +77,5 @@ jobs:
             -var="security_group_id=${{ env.SECURITY_GROUP_ID }}" \
             -var="alb_arn=${{ env.ALB_ARN }}" \
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}"
+
 
