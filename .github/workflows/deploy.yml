@@ -81,6 +81,14 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
         run: terraform init -input=false
 
+      - name: Debug variables
+        run: |
+          echo "VPC_ID=${{ secrets.VPC_ID }}"
+          echo "SUBNET_IDS=${{ secrets.SUBNET_IDS }}"
+          echo "SECURITY_GROUP_ID=${{ secrets.SECURITY_GROUP_ID }}"
+          echo "ALB_ARN=${{ secrets.ALB_ARN }}"
+          echo "ECR_IMAGE_URL=${{ env.ECR_IMAGE_URL }}"
+
       - name: Terraform Apply ECS
         working-directory: ./terraform/ecs
         env:
