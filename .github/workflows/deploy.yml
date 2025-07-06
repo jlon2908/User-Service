@@ -101,4 +101,5 @@ jobs:
             -var='subnet_ids=["subnet-057a322f484b9f962","subnet-09ee219f4838cb06f"]' \
             -var="security_group_id=${{ secrets.SECURITY_GROUP_ID }}" \
             -var="alb_arn=${{ secrets.ALB_ARN }}" \
+            -var="alb_listener_arn=${{ secrets.ALB_LISTENER_ARN }}" \
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}"
