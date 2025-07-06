@@ -3,9 +3,9 @@ spring:
     name: user-service
 
   flyway:
-    url: jdbc:postgresql://userdb.c4b4ogqqybf1.us-east-1.rds.amazonaws.com:5432/userdb
-    user: postgres
-    password: LONque123*
+    url: ${DB_JDBC_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     baseline-on-migrate: true
     locations: classpath:db/migration
 
@@ -27,17 +27,17 @@ logging:
     org.springframework.security: DEBUG
 
 postgresql:
-  host: userdb.c4b4ogqqybf1.us-east-1.rds.amazonaws.com
+  host: ${DB_HOST}
   port: 5432
   database: userdb
   schema: public
-  username: postgres
-  password: LONque123*
+  username: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
   ssl: allow
 
 security:
   jwt:
-    secret: "LONque1234567890LONque1234567890abcd"
+    secret: ${JWT_SECRET}
     expiration: 3600 # in seconds
     header: Authorization
     prefix: Bearer
