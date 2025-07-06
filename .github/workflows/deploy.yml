@@ -88,10 +88,6 @@ jobs:
           echo "ALB_ARN=${{ secrets.ALB_ARN }}"
           echo "ECR_IMAGE_URL=${{ env.ECR_IMAGE_URL }}"
 
-      - name: Terraform Import ECS Service
-        working-directory: ./terraform/ecs
-        run: terraform import aws_ecs_service.user_service arka-ecs-cluster/user-service || true
-
       - name: Terraform Apply ECS
         working-directory: ./terraform/ecs
         env:
