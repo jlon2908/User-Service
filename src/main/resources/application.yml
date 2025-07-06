@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: user-service
+
+  flyway:
+    url: jdbc:postgresql://userdb.c4b4ogqqybf1.us-east-1.rds.amazonaws.com:5432/userdb
+    user: postgres
+    password: LONque123*
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  main:
+    web-application-type: reactive
+
+  jackson:
+    serialization:
+      indent-output: true
+
+server:
+  port: 8084
+
+logging:
+  level:
+    org.springframework.web.reactive.function.client.ExchangeFunctions: TRACE
+    org.springframework.web.reactive.function.client.WebClient: DEBUG
+    org.springframework.data.r2dbc.core: DEBUG
+    org.springframework.security: DEBUG
+
+postgresql:
+  host: userdb.c4b4ogqqybf1.us-east-1.rds.amazonaws.com
+  port: 5432
+  database: userdb
+  schema: public
+  username: postgres
+  password: LONque123*
+  ssl: allow
+
+security:
+  jwt:
+    secret: "LONque1234567890LONque1234567890abcd"
+    expiration: 3600 # in seconds
+    header: Authorization
+    prefix: Bearer
