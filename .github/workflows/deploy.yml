@@ -1,6 +1,5 @@
 name: Deploy User Service to AWS ECS
 
-
 on:
   push:
     branches: [main]
