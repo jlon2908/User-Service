@@ -36,17 +36,12 @@ jobs:
         with:
           terraform_version: 1.6.6
 
-      - name: Terraform Init ECR
+      - name: Terraform Init, Import & Apply ECR
         working-directory: ./terraform/ecr
-        run: terraform init
-
-      - name: Terraform Import ECR (idempotente)
-        working-directory: ./terraform/ecr
-        run: terraform import -allow-missing-config aws_ecr_repository.user_service user-service || true
-
-      - name: Terraform Apply ECR
-        working-directory: ./terraform/ecr
-        run: terraform apply -auto-approve
+        run: |
+          terraform init
+          terraform import -allow-missing-config aws_ecr_repository.user_service user-service || true
+          terraform apply -auto-approve
 
       - name: Get ECR Repository URL
         id: get_ecr_url
