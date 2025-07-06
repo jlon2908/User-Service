@@ -4,21 +4,6 @@ variable "subnet_ids" { type = list(string) }
 variable "security_group_id" {}
 variable "alb_arn" {}
 
-# Listener HTTP para el ALB existente
-resource "aws_lb_listener" "user_service" {
-  load_balancer_arn = var.alb_arn
-  port              = 80
-  protocol          = "HTTP"
-  default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Not Found"
-      status_code  = "404"
-    }
-  }
-}
-
 variable "alb_listener_arn" {
   description = "ARN del listener del ALB. Si no se provee, se usará el creado por Terraform."
   default     = null
@@ -87,7 +72,7 @@ resource "aws_lb_target_group" "user_service" {
 
 # Listener Rule para redirección
 resource "aws_lb_listener_rule" "user_service" {
-  listener_arn = var.alb_listener_arn != null ? var.alb_listener_arn : aws_lb_listener.user_service.arn
+  listener_arn = var.alb_listener_arn
   priority     = 100
   action {
     type             = "forward"
