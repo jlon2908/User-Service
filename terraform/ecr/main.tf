@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "mi-bucket-terraform-estado"
+    bucket = "arka-dev-artifacts"
     key    = "user-service/ecr/terraform.tfstate"
     region = "us-east-1"
   }
