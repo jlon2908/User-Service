@@ -40,6 +40,12 @@ jobs:
         working-directory: ./terraform/ecr
         run: terraform init
 
+      - name: Terraform Import ECR (idempotente)
+        working-directory: ./terraform/ecr
+        run: |
+          terraform init
+          terraform import -allow-missing-config aws_ecr_repository.user_service user-service || true
+
       - name: Terraform Apply ECR
         working-directory: ./terraform/ecr
         run: terraform apply -auto-approve
@@ -77,5 +83,3 @@ jobs:
             -var="security_group_id=${{ env.SECURITY_GROUP_ID }}" \
             -var="alb_arn=${{ env.ALB_ARN }}" \
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}"
-
-
