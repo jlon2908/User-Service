@@ -38,10 +38,14 @@ jobs:
 
       - name: Terraform Init, Import & Apply ECR
         working-directory: ./terraform/ecr
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
         run: |
-          terraform init
-          terraform import -allow-missing-config aws_ecr_repository.user_service user-service || true
-          terraform apply -auto-approve
+          terraform init -input=false
+          terraform import -input=false -allow-missing-config aws_ecr_repository.user_service user-service || true
+          terraform apply -auto-approve -input=false
 
       - name: Get ECR Repository URL
         id: get_ecr_url
@@ -50,6 +54,10 @@ jobs:
           echo "ECR_REPOSITORY_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
 
       - name: Login to Amazon ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
         run: |
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ env.ECR_REPOSITORY_URL }}
 
@@ -63,16 +71,23 @@ jobs:
 
       - name: Terraform Init ECS
         working-directory: ./terraform/ecs
-        run: terraform init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: terraform init -input=false
 
       - name: Terraform Apply ECS
         working-directory: ./terraform/ecs
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
           ECR_IMAGE_URL: ${{ env.ECR_REPOSITORY_URL }}:latest
         run: |
-          terraform apply -auto-approve \
-            -var="vpc_id=${{ env.VPC_ID }}" \
-            -var="subnet_ids=${{ env.SUBNET_IDS }}" \
-            -var="security_group_id=${{ env.SECURITY_GROUP_ID }}" \
-            -var="alb_arn=${{ env.ALB_ARN }}" \
+          terraform apply -auto-approve -input=false \
+            -var="vpc_id=${{ secrets.VPC_ID }}" \
+            -var="subnet_ids=${{ secrets.SUBNET_IDS }}" \
+            -var="security_group_id=${{ secrets.SECURITY_GROUP_ID }}" \
+            -var="alb_arn=${{ secrets.ALB_ARN }}" \
             -var="ecr_image_url=${{ env.ECR_IMAGE_URL }}"
