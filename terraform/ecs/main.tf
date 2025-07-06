@@ -24,6 +24,12 @@ variable "ecs_cluster_arn" {
   type        = string
 }
 
+# CloudWatch Log Group
+resource "aws_cloudwatch_log_group" "user_service" {
+  name              = "/ecs/user-service"
+  retention_in_days = 7
+}
+
 # Task Definition
 resource "aws_ecs_task_definition" "user_service" {
   family                   = "user-service-task"
@@ -38,6 +44,14 @@ resource "aws_ecs_task_definition" "user_service" {
       image     = var.ecr_image_url
       portMappings = [{ containerPort = 8084, hostPort = 8084 }]
       environment = []
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.user_service.name
+          awslogs-region        = "us-east-1"
+          awslogs-stream-prefix = "ecs"
+        }
+      }
     }
   ])
 }
