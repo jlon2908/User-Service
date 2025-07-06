@@ -70,7 +70,7 @@ resource "aws_lb_listener_rule" "user_service" {
   }
 }
 
-# ECS Service
+# Recurso para el servicio ECS
 resource "aws_ecs_service" "user_service" {
   name            = "user-service"
   cluster         = var.ecs_cluster_arn
