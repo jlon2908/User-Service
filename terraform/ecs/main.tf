@@ -55,6 +55,7 @@ resource "aws_ecs_task_definition" "user_service" {
   ])
 }
 
+
 # Listener Rule para redirección
 resource "aws_lb_listener_rule" "user_service" {
   listener_arn = var.alb_listener_arn
