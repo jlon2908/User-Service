@@ -42,9 +42,7 @@ jobs:
 
       - name: Terraform Import ECR (idempotente)
         working-directory: ./terraform/ecr
-        run: |
-          terraform init
-          terraform import -allow-missing-config aws_ecr_repository.user_service user-service || true
+        run: terraform import -allow-missing-config aws_ecr_repository.user_service user-service || true
 
       - name: Terraform Apply ECR
         working-directory: ./terraform/ecr
